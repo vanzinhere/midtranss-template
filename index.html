@@ -1,53 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Midtrans Payment Link</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Midtrans Payment Link</title>
 </head>
 <body>
-    <h1>Midtrans Payment Link</h1>
+
+<h1>Pembayaran Midtrans</h1>
+
+<button onclick="generateMidtransPaymentLink()">Buat Tautan Pembayaran</button>
+
+<p id="paymentLink"></p>
+
+<script>
+function generateMidtransPaymentLink() {
+    // Ganti dengan informasi toko Anda
+    var serverKey = 'SB-Mid-server-YaLUWdfR5cCIVsn7W-l_2bCH'; // Ganti dengan server key Anda dari Midtrans
+    var clientKey = 'SB-Mid-client-DF1bWDMXL9UqwDpc'; // Ganti dengan client key Anda dari Midtrans
+    var orderId = 'G142036402'; // Ganti dengan ID pemesanan unik Anda
+    var amount = 100000; // Ganti dengan jumlah pembayaran
     
-    <div>
-        <label for="orderId">Order ID:</label>
-        <input type="text" id="orderId" name="orderId" value="ORDER123">
-    </div>
-    <div>
-        <label for="amount">Amount:</label>
-        <input type="number" id="amount" name="amount" value="100000">
-    </div>
-    <button onclick="createPaymentLink()">Generate Payment Link</button>
-
-    <script>
-        function createPaymentLink() {
-            var orderId = document.getElementById('orderId').value;
-            var amount = document.getElementById('amount').value;
-
-            // Data transaksi yang akan dikirim ke server Node.js
-            var transactionData = {
-                "orderId": orderId,
-                "amount": amount
-            };
-
-            // Kirim permintaan ke server Node.js untuk membuat link pembayaran
-            fetch('http://localhost:3000/create-payment-link', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(transactionData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                var paymentUrl = data.paymentUrl;
-                // Redirect ke halaman pembayaran Midtrans
-                window.location.href = paymentUrl;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error occurred while creating payment link.');
-            });
+    var data = {
+        "transaction_details": {
+            "order_id": orderId,
+            "gross_amount": amount
+        },
+        "credit_card": {
+            "secure": true
         }
-    </script>
+    };
+
+    // Kirim permintaan ke Midtrans untuk membuat pembayaran
+    fetch('https://api.sandbox.midtrans.com/v2/charge', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Basic ' + btoa(serverKey + ':')
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        var paymentLink = data.redirect_url;
+        document.getElementById('paymentLink').innerHTML = '<a href="' + paymentLink + '">Tautan Pembayaran</a>';
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('paymentLink').innerHTML = 'Gagal membuat tautan pembayaran.';
+    });
+}
+</script>
+
 </body>
 </html>
