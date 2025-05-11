@@ -19,8 +19,9 @@ It is currently set to work only in **sandbox mode** (testing mode) provided by 
 
 ### 1. Clone or Download the Repository
 
-```bash```
+```bash
 git clone https://github.com/vanzinhere/midtranss-template.git
+```
 
 ### 2. Install Node.js
 - **If you haven't installed Node.js yet, download it from here**: [Download Here](https://nodejs.org)
