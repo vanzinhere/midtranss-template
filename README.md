@@ -29,10 +29,12 @@ git clone https://github.com/vanzinhere/midtranss-template.git
 ### 3. Install Required Modules
 - **Open your terminal inside the project folder and run**:
 
-```bash`
+```bash
 npm install express body-parser request
+```
 
 ### 4. Run The Server
 
-```bash`
+```bash
 node server.js
+```
